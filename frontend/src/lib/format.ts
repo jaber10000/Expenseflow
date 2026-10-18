@@ -22,6 +22,25 @@ export const pct = (ratio: number | string, digits = 0) => {
   return `${(Number.isFinite(n) ? n * 100 : 0).toFixed(digits)}%`
 }
 
+/** Money from integer minor units (cents/paisa): moneyMinor(123456, 'USD') = "$1,235". */
+export const moneyMinor = (minor: number | string, currency = 'USD') => money(Number(minor) / 100, currency)
+/** Compact money from a major-unit amount: moneyCompact(12500, 'USD') = "$12.5K". */
+export const moneyCompact = (amount: number | string, currency = 'USD') => money(Number(amount), currency, true)
+
+type DateLike = Date | string
+const toDate = (d: DateLike) =>
+  d instanceof Date ? d : /^\d{4}-\d{2}$/.test(d) ? parseDate(`${d}-01`) : parseDate(d.slice(0, 10))
+/** "October 2026" (accepts Date, "YYYY-MM-DD" or "YYYY-MM"). Pass short=true for "Oct 2026". */
+export const monthLabel = (d: DateLike, short = false) =>
+  toDate(d).toLocaleDateString('en-US', { month: short ? 'short' : 'long', year: 'numeric' })
+/** "Oct 19" */
+export const dayLabel = (d: DateLike) => toDate(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+/** "Monday" / "Mon". Accepts a Date, an ISO string, or a weekday index 0 (Sun) - 6 (Sat). */
+export const weekdayName = (d: DateLike | number, short = false) => {
+  const date = typeof d === 'number' ? new Date(2024, 0, 7 + d) : toDate(d)
+  return date.toLocaleDateString('en-US', { weekday: short ? 'short' : 'long' })
+}
+
 export const initials = (name: string) =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?'
 
