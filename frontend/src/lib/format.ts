@@ -56,11 +56,20 @@ export const dayLabel = (date: Date) =>
     weekday: "short",
   });
 
-export const monthLabel = (date: Date) =>
-  date.toLocaleDateString("en-US", {
-    month: "short",
-    year: "numeric",
-  });
+export const monthLabel = (
+  key: string,
+  format: "short" | "long" = "long"
+) => {
+  const [year, month] = key.split("-").map(Number)
+
+  return new Date(year, month - 1, 1).toLocaleDateString(
+    "en-US",
+    {
+      month: format,
+      year: "numeric",
+    }
+  )
+}
 
 export const moneyCompact = (
   amount: number,
@@ -72,3 +81,24 @@ export const moneyCompact = (
     notation: "compact",
     maximumFractionDigits: 1,
   }).format(amount);
+
+export const moneyMinor = (
+  amount: number,
+  currency: string
+) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).format(amount)
+
+
+export const weekdayName = (
+  dayIndex: number,
+  format: "short" | "long" = "long"
+) => {
+  const base = new Date(2024, 0, 7 + dayIndex)
+
+  return base.toLocaleDateString("en-US", {
+    weekday: format,
+  })
+}
