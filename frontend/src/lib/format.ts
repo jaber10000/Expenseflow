@@ -30,15 +30,19 @@ export const moneyCompact = (amount: number | string, currency = 'USD') => money
 type DateLike = Date | string
 const toDate = (d: DateLike) =>
   d instanceof Date ? d : /^\d{4}-\d{2}$/.test(d) ? parseDate(`${d}-01`) : parseDate(d.slice(0, 10))
-/** "October 2026" (accepts Date, "YYYY-MM-DD" or "YYYY-MM"). Pass short=true for "Oct 2026". */
-export const monthLabel = (d: DateLike, short = false) =>
-  toDate(d).toLocaleDateString('en-US', { month: short ? 'short' : 'long', year: 'numeric' })
-/** "Oct 19" */
-export const dayLabel = (d: DateLike) => toDate(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-/** "Monday" / "Mon". Accepts a Date, an ISO string, or a weekday index 0 (Sun) - 6 (Sat). */
-export const weekdayName = (d: DateLike | number, short = false) => {
+type Style = boolean | 'short' | 'long' | 'narrow'
+const style = (v: Style | undefined, dflt: 'short' | 'long'): 'short' | 'long' | 'narrow' =>
+  v === true ? 'short' : v === false || v === undefined ? dflt : v
+/** "October 2026". Second arg: 'short' (or true) -> "Oct 2026". Accepts Date, "YYYY-MM-DD" or "YYYY-MM". */
+export const monthLabel = (d: DateLike, s?: Style) =>
+  toDate(d).toLocaleDateString('en-US', { month: style(s, 'long'), year: 'numeric' })
+/** "Oct 19". Second arg 'long' -> "October 19". */
+export const dayLabel = (d: DateLike, s?: Style) =>
+  toDate(d).toLocaleDateString('en-US', { month: style(s, 'short'), day: 'numeric' })
+/** "Monday". Second arg 'short' (or true) -> "Mon". Accepts a Date, an ISO string, or a weekday index 0 (Sun) - 6 (Sat). */
+export const weekdayName = (d: DateLike | number, s?: Style) => {
   const date = typeof d === 'number' ? new Date(2024, 0, 7 + d) : toDate(d)
-  return date.toLocaleDateString('en-US', { weekday: short ? 'short' : 'long' })
+  return date.toLocaleDateString('en-US', { weekday: style(s, 'long') })
 }
 
 export const initials = (name: string) =>
