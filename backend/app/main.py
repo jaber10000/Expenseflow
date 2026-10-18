@@ -12,12 +12,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://expenseflow-beryl.vercel.app"
+        "https://expenseflow-beryl.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 app.include_router(auth_router, prefix="/api/auth", tags=["Auth"], dependencies=[Depends(csrf_protect)])
 app.include_router(
     transactions_router, prefix="/api/transactions", tags=["Transactions"], dependencies=[Depends(csrf_protect)]
