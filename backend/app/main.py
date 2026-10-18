@@ -10,10 +10,13 @@ from app.core.config import settings
 app = FastAPI(title=settings.app_name, version="1.1.0", description="ExpenseFlow expense management API")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_origin, "http://127.0.0.1:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://expenseflow-beryl.vercel.app"
+    ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "X-Requested-With"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 app.include_router(auth_router, prefix="/api/auth", tags=["Auth"], dependencies=[Depends(csrf_protect)])
 app.include_router(
