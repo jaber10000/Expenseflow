@@ -50,3 +50,25 @@ export const CATEGORY_COLORS: Record<string, string> = {
   Bills: '#ef4444', Health: '#10b981', Salary: '#22c55e', Freelance: '#3b82f6', Other: '#94a3b8',
 }
 export const catColor = (c: string) => CATEGORY_COLORS[c] ?? '#94a3b8'
+
+export const dayLabel = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    weekday: "short",
+  });
+
+export const monthLabel = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+
+export const moneyCompact = (
+  amount: number,
+  currency = "USD"
+) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(amount);
