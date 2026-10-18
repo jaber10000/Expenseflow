@@ -1,7 +1,7 @@
 import type { RegisterData, Transaction, TransactionCreate, User } from '../types'
 
 // Production: same-origin ('') so Vercel proxies /api/* to the backend (see vercel.json) and the cookie stays first-party.
-const API_URL = import.meta.env.VITE_API_URL ?? (import.meta.env.PROD ? '' : 'https://expenseflow-e4vp.onrender.com')
+const API_URL = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL ?? 'http://localhost:8000')
 
 export class ApiError extends Error {
   status: number
