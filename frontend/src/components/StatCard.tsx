@@ -2,10 +2,10 @@ import type { ReactNode } from 'react'
 import { ArrowDownRight, ArrowUpRight, Minus } from 'lucide-react'
 import { useCountUp } from '../hooks/useCountUp'
 
-type Props = { label: string; value: number; format: (n: number) => string; note: string; icon: ReactNode; tone: string; delta?: number | null; goodWhenUp?: boolean; index?: number }
+type Props = { label: string; value: number | string; format: (n: number) => string; note: string; icon: ReactNode; tone: string; delta?: number | null; goodWhenUp?: boolean; index?: number }
 
 export default function StatCard({ label, value, format, note, icon, tone, delta, goodWhenUp = true, index = 0 }: Props) {
-  const shown = useCountUp(value)
+  const shown = useCountUp(Number(value) || 0)
   const good = delta == null ? null : (delta >= 0) === goodWhenUp
   return (
     <article className="stat-card reveal" style={{ ['--tone' as string]: tone, ['--i' as string]: index }}>

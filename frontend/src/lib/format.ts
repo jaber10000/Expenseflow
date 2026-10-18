@@ -12,6 +12,16 @@ export const money = (amount: number, currency: string, compact = false) =>
     notation: compact ? 'compact' : 'standard',
   }).format(amount)
 
+/** Whole-unit currency, no decimals (e.g. $1,235). */
+export const moneyWhole = (amount: number | string, currency = 'USD') =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: 0 }).format(Number(amount))
+
+/** Ratio -> percent string: pct(0.425) = "43%", pct(0.425, 1) = "42.5%". Non-finite -> "0%". */
+export const pct = (ratio: number | string, digits = 0) => {
+  const n = Number(ratio)
+  return `${(Number.isFinite(n) ? n * 100 : 0).toFixed(digits)}%`
+}
+
 export const initials = (name: string) =>
   name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('') || '?'
 
@@ -21,7 +31,11 @@ export const todayIso = () => {
   const d = new Date()
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
-export const monthKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+// Accepts a Date or an ISO date string ("2026-10-19" or full timestamp).
+export const monthKey = (d: Date | string) => {
+  const x = typeof d === 'string' ? parseDate(d.slice(0, 10)) : d
+  return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}`
+}
 
 export function greeting(): string {
   const h = new Date().getHours()
@@ -50,55 +64,3 @@ export const CATEGORY_COLORS: Record<string, string> = {
   Bills: '#ef4444', Health: '#10b981', Salary: '#22c55e', Freelance: '#3b82f6', Other: '#94a3b8',
 }
 export const catColor = (c: string) => CATEGORY_COLORS[c] ?? '#94a3b8'
-
-export const dayLabel = (date: Date) =>
-  date.toLocaleDateString("en-US", {
-    weekday: "short",
-  });
-
-export const monthLabel = (
-  key: string,
-  format: "short" | "long" = "long"
-) => {
-  const [year, month] = key.split("-").map(Number)
-
-  return new Date(year, month - 1, 1).toLocaleDateString(
-    "en-US",
-    {
-      month: format,
-      year: "numeric",
-    }
-  )
-}
-
-export const moneyCompact = (
-  amount: number,
-  currency = "USD"
-) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(amount);
-
-export const moneyMinor = (
-  amount: number,
-  currency: string
-) =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-  }).format(amount)
-
-
-export const weekdayName = (
-  dayIndex: number,
-  format: "short" | "long" = "long"
-) => {
-  const base = new Date(2024, 0, 7 + dayIndex)
-
-  return base.toLocaleDateString("en-US", {
-    weekday: format,
-  })
-}
