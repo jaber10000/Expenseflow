@@ -43,7 +43,7 @@ npm run dev
 
 ## 🌐 Live Demo
 
-[https://your-app.vercel.app](https://expenseflow-beryl.vercel.app/)
+[https://expenseflow-beryl.vercel.app/]
 
 ## 👨‍💻 Author
 
